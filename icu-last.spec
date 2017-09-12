@@ -12,7 +12,7 @@
 
 Name:      icu-last
 Version:   50.1.2
-Release:   11%{?dist}
+Release:   15%{?dist}
 Summary:   International Components for Unicode
 Group:     Development/Tools
 License:   MIT and UCD and Public Domain
@@ -23,7 +23,6 @@ Source0:   http://download.icu-project.org/files/icu4c/50.1.2/icu4c-50_1_2-src.t
 Source1:   http://download.icu-project.org/files/icu4c/51.1/icu-51-layout-fix-10107.tgz
 Source2:   icu-config.sh
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: doxygen, autoconf, python
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Conflicts: %{srcname} < %{version}
@@ -38,7 +37,6 @@ Patch6: icuinfo-man.patch
 Patch7: icu.10143.memory.leak.crash.patch
 Patch8: icu.10318.CVE-2013-2924_changeset_34076.patch
 Patch9: icu.rhbz1074549.CVE-2013-5907.patch
-# Patch6 from fedora rawhide spec
 Patch10: icu-testtwodigityear.patch
 
 %description
@@ -224,8 +222,20 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{srcname}/html/*
 
 %changelog
-* Tue Nov 25 2014 Remi Collet <rpms@famillecollet.com>- 50.1.2-11
+* Tue Sep 12 2017 Remi Collet <rpms@famillecollet.com>- 50.1.2-15
 - backport RHEL-7 changes
+
+* Tue Aug 19 2014 Eike Rathke <erack@redhat.com> - 50.1.2-15
+- Resolves: rhbz#1126237 correct sources list file
+
+* Mon Aug 18 2014 Eike Rathke <erack@redhat.com> - 50.1.2-14
+- Resolves: rhbz#1126237 bumped n-v-r for icu-config.sh upload
+
+* Mon Aug 04 2014 Eike Rathke <erack@redhat.com> - 50.1.2-13
+- Resolves: rhbz#1126237 icu-config for ppc64le
+
+* Mon Jul 14 2014 Eike Rathke <erack@redhat.com> - 50.1.2-12
+- Resolves: rhbz#1115726 bad 2-digit year test case, FTBFS
 
 * Tue Mar 11 2014 Eike Rathke <erack@redhat.com> - 50.1.2-11
 - Resolves: rhbz#1074549 Layout Engine LookupProcessor insufficient input checks
