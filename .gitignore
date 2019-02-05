@@ -1,0 +1,8 @@
+clog
+package-*.xml
+*.tgz
+*.tar.gz
+*.tar.xz
+*.tar.xz.asc
+*.src.rpm
+*/*rpm
