@@ -1,44 +1,43 @@
+# remirepo spec file for icu62
+# renamed for parallel installation, from:
+#
+# Fedora spec file for icu
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global srcname       icu
+%global soname        62
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
-Name:      icu-last
-Version:   50.1.2
-Release:   17%{?dist}
+Name:      icu%{soname}
+Version:   %{soname}.1
+Release:   3%{?dist}
 Summary:   International Components for Unicode
-Group:     Development/Tools
 License:   MIT and UCD and Public Domain
-URL:       http://www.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/50.1.2/icu4c-50_1_2-src.tgz
-# According to ICU the layout "patch" should be applied to all versions earlier than 51.2
-# See also http://site.icu-project.org/download/51#TOC-Known-Issues
-Source1:   http://download.icu-project.org/files/icu4c/51.1/icu-51-layout-fix-10107.tgz
-Source2:   icu-config.sh
-Source10:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/metaZones.txt
-Source11:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/timezoneTypes.txt
-Source12:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/windowsZones.txt
-Source13:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/zoneinfo64.txt
-%if 0%{?rhel} == 6
-BuildRequires: doxygen, autoconf268, python
-%else
-BuildRequires: doxygen, autoconf, python
-%endif
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-Conflicts: %{srcname} < %{version}
-Provides:  %{srcname} = %{version}-%{release}
+URL:       http://site.icu-project.org/
+Source0:   http://download.icu-project.org/files/icu4c/%{soname}.1/icu4c-%{soname}_1-src.tgz
+Source1:   icu-config.sh
 
-Patch1: icu.8198.revert.icu5431.patch
-Patch2: icu.8800.freeserif.crash.patch
-Patch3: icu.7601.Indic-ccmp.patch
-Patch4: icu.9948.mlym-crash.patch
-Patch5: gennorm2-man.patch
-Patch6: icuinfo-man.patch
-Patch7: icu.10143.memory.leak.crash.patch
-Patch8: icu.10318.CVE-2013-2924_changeset_34076.patch
-Patch9: icu.rhbz1074549.CVE-2013-5907.patch
-Patch10: icu-testtwodigityear.patch
-Patch11: do-not-fail-intltest-because-of-changed-data.patch
+BuildRequires: doxygen, autoconf >= 2.69, python2
+BuildRequires: gcc
+BuildRequires: gcc-c++
+
+Requires: lib%{name}%{?_isa} = %{version}-%{release}
+Conflicts: %{srcname}-last    < %{version}
+Conflicts: %{srcname}         < %{version}
+Provides:  %{srcname}         = %{version}-%{release}
+Provides:  %{srcname}%{?_isa} = %{version}-%{release}
+
+Patch4: gennorm2-man.patch
+Patch5: icuinfo-man.patch
+Patch6: rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
+Patch100: armv7hl-disable-tests.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -59,15 +58,17 @@ results across all the various platforms you support, without
 sacrificing performance. It offers great flexibility to extend and
 customize the supplied services.
 
-This package is designed to be installable  %{srcname}.
+This package is designed to be installable beside lib%{srcname}.
 
 %package  -n lib%{name}-devel
 Summary:  Development files for International Components for Unicode
 Group:    Development/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
-Conflicts: lib%{srcname}-devel < %{version}
-Provides:  lib%{srcname}-devel = %{version}-%{release}
+Conflicts: lib%{srcname}-last-devel    < %{version}
+Conflicts: lib%{srcname}-devel         < %{version}
+Provides:  lib%{srcname}-devel         = %{version}-%{release}
+Provides:  lib%{srcname}-devel%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-devel
 Includes and definitions for developing with icu.
@@ -76,8 +77,9 @@ Includes and definitions for developing with icu.
 Summary: Documentation for International Components for Unicode
 Group:   Documentation
 BuildArch: noarch
-Conflicts: lib%{srcname}-doc < %{version}
-Provides:  lib%{srcname}-doc = %{version}-%{release}
+Conflicts: lib%{srcname}-last-doc < %{version}
+Conflicts: lib%{srcname}-doc      < %{version}
+Provides:  lib%{srcname}-doc      = %{version}-%{release}
 
 %description -n lib%{name}-doc
 %{summary}.
@@ -85,58 +87,35 @@ Provides:  lib%{srcname}-doc = %{version}-%{release}
 %{!?endian: %global endian %(%{__python} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
 # " this line just fixes syntax highlighting for vim that is confused by the above and continues literal
 
+
 %prep
 %setup -q -n %{srcname}
-%setup -q -n %{srcname} -T -D -a 1
-%patch1 -p2 -R -b .icu8198.revert.icu5431.patch
-%patch2 -p1 -b .icu8800.freeserif.crash.patch
-%patch3 -p1 -b .icu7601.Indic-ccmp.patch
-%patch4 -p1 -b .icu9948.mlym-crash.patch
-%patch5 -p1 -b .gennorm2-man.patch
-%patch6 -p1 -b .icuinfo-man.patch
-%patch7 -p1 -b .icu10143.memory.leak.crash.patch
-%patch8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
-%patch9 -p1 -b .icurhbz1074549.CVE-2013-5907.patch
-%patch10 -p1 -b .icu-testtwodigityear.patch
-%patch11 -p1 -b .do-not-fail-intltest-because-of-changed-data.patch
-
-# http://userguide.icu-project.org/datetime/timezone#TOC-Updating-the-Time-Zone-Data
-# says:
-#
-# > ICU4C TZ update when ICU data is built into a shared library
-# > [...]
-# > Copy the downloaded .txt files into the ICU sources for your installation,
-# > in the subdirectory  source/data/misc/
-# > [...]
-cp %{SOURCE10} source/data/misc/
-cp %{SOURCE11} source/data/misc/
-cp %{SOURCE12} source/data/misc/
-cp %{SOURCE13} source/data/misc/
+%patch4 -p1 -b .gennorm2-man.patch
+%patch5 -p1 -b .icuinfo-man.patch
+%patch6 -p2 -b .rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
+%ifarch armv7hl
+%patch100 -p1 -b .armv7hl-disable-tests.patch
+%endif
 
 %build
-cd source
-%if 0%{?rhel} == 6
-autoconf268
-%else
+pushd source
 autoconf
-%endif
 CFLAGS='%optflags -fno-strict-aliasing'
 CXXFLAGS='%optflags -fno-strict-aliasing'
 # Endian: BE=0 LE=1
 %if ! 0%{?endian}
 CPPFLAGS='-DU_IS_BIG_ENDIAN=1'
 %endif
+
 #rhbz856594 do not use --disable-renaming or cope with the mess
-%configure --with-data-packaging=library --disable-samples
+OPTIONS='--with-data-packaging=library --disable-samples'
+%if 0%{?debugtrace}
+OPTIONS=$OPTIONS' --enable-debug --enable-tracing'
+%endif
+%configure $OPTIONS
+
 #rhbz#225896
 sed -i 's|-nodefaultlibs -nostdlib||' config/mh-linux
-#rhbz#681941
-sed -i 's|^LIBS =.*|LIBS = -L../lib -licuuc -lpthread -lm|' i18n/Makefile
-sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../lib -licuuc -licui18n -lc -lgcc|' io/Makefile
-sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../lib -licuuc -lc|' layout/Makefile
-sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../lib -licuuc -licule -lc|' layoutex/Makefile
-sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../../lib -licutu -licuuc -lc|' tools/ctestfw/Makefile
-sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../../lib -licui18n -licuuc -lpthread -lc|' tools/toolutil/Makefile
 #rhbz#813484
 sed -i 's| \$(docfilesdir)/installdox||' Makefile
 # There is no source/doc/html/search/ directory
@@ -146,19 +125,11 @@ sed -i '/^\s\+\$(INSTALL_DATA) \$(docsrchfiles) \$(DESTDIR)\$(docdir)\/\$(docsub
 # icu/source/common/unicode/uconfig.h to propagate to consumer packages.
 test -f uconfig.h.prepend && sed -e '/^#define __UCONFIG_H__/ r uconfig.h.prepend' -i common/unicode/uconfig.h
 
-make %{?_smp_mflags}
-make %{?_smp_mflags} doc
+# more verbosity for build.log
+sed -i -r 's|(PKGDATA_OPTS = )|\1-v |' data/Makefile
 
-# remove the original timezone data and build the new data from the updated
-# zoneinfo64.txt file:
-%ifarch s390 s390x ppc ppc64
-rm -f ./data/out/build/icudt50b/zoneinfo64.res
-make -C data ./out/build/icudt50b/zoneinfo64.res
-%else
-rm -f ./data/out/build/icudt50l/zoneinfo64.res
-make -C data ./out/build/icudt50l/zoneinfo64.res
-%endif
-make
+make %{?_smp_mflags} VERBOSE=1
+make %{?_smp_mflags} doc
 
 %install
 rm -rf $RPM_BUILD_ROOT source/__docs
@@ -169,26 +140,35 @@ chmod +x $RPM_BUILD_ROOT%{_libdir}/*.so.*
  cd $RPM_BUILD_ROOT%{_bindir}
  mv icu-config icu-config-%{__isa_bits}
 )
-install -p -m755 -D %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/icu-config
+install -p -m755 -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/icu-config
 
 %check
 # test to ensure that -j(X>1) didn't "break" man pages. b.f.u #2357
 if grep -q @VERSION@ source/tools/*/*.8 source/tools/*/*.1 source/config/*.1; then
     exit 1
 fi
-%if %runselftest
-# add CINTLTST_OPTS=-w and INTLTEST_OPTS=-w
-# to turn the errors caused by the timezone data update
-# into warnings:
-make %{?_smp_mflags} -C source check CINTLTST_OPTS=-w INTLTEST_OPTS=-w
+%ifarch i686
+# F26 since the mass rebuild in 2017-Feb fails a check, ignore error. TODO: find cause / disable only one.
+make %{?_smp_mflags} -C source check ||:
+%else
+make %{?_smp_mflags} -C source check
 %endif
 
-%post -n lib%{name} -p /sbin/ldconfig
+# log available codes
+pushd source
+LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
+
+%if 0%{?fedora} < 28 && 0%{?rhel} < 8
+%post   -n lib%{name} -p /sbin/ldconfig
 %postun -n lib%{name} -p /sbin/ldconfig
+%endif
+
+%{!?_licensedir:%global license %%doc}
 
 %files
-%defattr(-,root,root,-)
+%license license.html
+%exclude %{_datadir}/%{srcname}/*/LICENSE
 %{_bindir}/derb
 %{_bindir}/genbrk
 %{_bindir}/gencfu
@@ -211,17 +191,17 @@ make %{?_smp_mflags} -C source check CINTLTST_OPTS=-w INTLTEST_OPTS=-w
 %{_mandir}/man8/*.8*
 
 %files -n lib%{name}
-%defattr(-,root,root,-)
-%doc license.html readme.html
-%{_libdir}/*.so.*
+%license LICENSE
+%doc readme.html
+%{_libdir}/*.so.%{soname}*
 
 %files -n lib%{name}-devel
-%defattr(-,root,root,-)
+%license LICENSE
+%doc source/samples/
 %{_bindir}/%{srcname}-config*
 %{_bindir}/icuinfo
 %{_mandir}/man1/%{srcname}-config.1*
 %{_mandir}/man1/icuinfo.1*
-%{_includedir}/layout
 %{_includedir}/unicode
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
@@ -231,19 +211,127 @@ make %{?_smp_mflags} -C source check CINTLTST_OPTS=-w INTLTEST_OPTS=-w
 %{_datadir}/%{srcname}/%{version}/install-sh
 %{_datadir}/%{srcname}/%{version}/mkinstalldirs
 %{_datadir}/%{srcname}/%{version}/config
-%doc %{_datadir}/%{srcname}/%{version}/license.html
 
 %files -n lib%{name}-doc
-%defattr(-,root,root,-)
-%doc license.html readme.html
+%license LICENSE
+%doc readme.html
 %doc source/__docs/%{srcname}/html/*
 
+
 %changelog
+* Thu Feb  7 2019 Pavel Podkorytov <pod.pavel@gmail.com> - 62.1-3
+- backport FEDORA-29 changes
+- rename "libicu-last" to "libicu62"
+
 * Tue Feb  5 2019 Remi Collet <rpms@famillecollet.com>- 50.1.2-17
 - backport RHEL-7.6 changes
 
+* Tue Nov 06 2018 Eike Rathke <erack@redhat.com> - 62.1-3
+- Resolves: rhbz#1646703 CVE-2018-18928
+
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 62.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
+* Tue Jul 10 2018 Pete Walter <pwalter@fedoraproject.org> - 62.1-1
+- Update to 62.1
+
+* Mon May 28 2018 Eike Rathke <erack@redhat.com> - 61.1-2
+- Resolves: rhbz#1582611 Add riscv64 to icu-config.sh
+
+* Tue Apr 24 2018 Eike Rathke <erack@redhat.com> - 61.1-1
+- Update to 61.1
+
+* Thu Mar 15 2018 Iryna Shcherbina <ishcherb@redhat.com> - 60.2-3
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 60.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Thu Dec 14 2017 Pete Walter <pwalter@fedoraproject.org> - 60.2-1
+- Update to 60.2
+
+* Thu Dec 14 2017 Eike Rathke <erack@redhat.com> - 60.1-2
+- Resolves: rhbz#1524820 CVE-2017-17484
+
+* Thu Nov 30 2017 Pete Walter <pwalter@fedoraproject.org> - 60.1-1
+- Update to 60.1
+
+* Wed Nov 08 2017 Eike Rathke <erack@redhat.com> - 57.1-9
+- Resolves: rhbz#1510932 CVE-2017-14952
+
 * Tue Sep 12 2017 Remi Collet <rpms@famillecollet.com>- 50.1.2-15
 - backport RHEL-7.2 changes
+
+* Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 57.1-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 57.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Thu Apr 20 2017 Eike Rathke <erack@redhat.com> - 57.1-6
+- Resolves: rhbz#1444101 CVE-2017-7867 CVE-2017-7868
+
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 57.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Fri Nov 18 2016 Eike Rathke <erack@redhat.com> - 57.1-4
+- dist.rpmgrill: "Percent signs in specfile changelog should be escaped"
+
+* Fri Nov 18 2016 Eike Rathke <erack@redhat.com> - 57.1-3
+- Resolves: rhbz#1377362 CVE-2016-7415
+
+* Tue Nov 01 2016 Eike Rathke <erack@redhat.com> - 57.1-2
+- Resolves: rhbz#1360340 CVE-2016-6293
+
+* Fri Apr 15 2016 Eike Rathke <erack@redhat.com> - 57.1-1
+- upgrade to upstream ICU 57.1
+
+* Tue Apr 05 2016 Eike Rathke <erack@redhat.com> - 56.1-7
+- make check failure is fatal again
+
+* Tue Apr 05 2016 Eike Rathke <erack@redhat.com> - 56.1-6
+- remove icu-56.1-codes-cache-extend.patch
+
+* Sun Feb 28 2016 Raphael Groner <projects.rg@smart.ms> - 56.1-5
+- even more verbosity and debug output
+- add path to extend ICU's internal cache of codes
+- use license macro
+- provide samples in devel subpackage
+- modernize generally
+
+* Sat Feb 27 2016 Rex Dieter <rdieter@fedoraproject.org> - 56.1-4
+- %%build: make VERBOSE=1
+- %%check: keep 'make check' non-fatal while investigating rhbz#1307633
+
+* Sat Feb 06 2016 Caolán McNamara <caolanm@redhat.com> - 56.1-3
+- Resolves: rhbz#1307633 FTBFS, disable check to get build through for now
+
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 56.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Tue Oct 27 2015 Eike Rathke <erack@redhat.com> - 56.1-1
+- Resolves: rhbz#1271353 upgrade to ICU 56.1
+
+* Fri Sep 18 2015 Eike Rathke <erack@redhat.com> - 54.1-5
+- Workaround rhbz#1239574 disabling offending tests on armv7hl
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 54.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Apr 10 2015 Eike Rathke <erack@redhat.com> - 54.1-3
+- Resolves: rhbz#1190131 CVE-2014-7923 CVE-2014-7926 CVE-2014-9654
+- Resolves: rhbz#1184811 CVE-2014-6585 CVE-2014-6591
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 54.1-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Mon Jan 26 2015 Eike Rathke <erack@redhat.com> - 54.1-1
+- Resolves: rhbz#1185433 upgrade to upstream ICU 54.1
+
+* Tue Aug 26 2014 Eike Rathke <erack@redhat.com> - 53.1-1
+- Resolves: rhbz#1130771 upgrade to upstream ICU 53.1
 
 * Tue Aug 19 2014 Eike Rathke <erack@redhat.com> - 50.1.2-15
 - Resolves: rhbz#1126237 correct sources list file
@@ -251,14 +339,31 @@ make %{?_smp_mflags} -C source check CINTLTST_OPTS=-w INTLTEST_OPTS=-w
 * Mon Aug 18 2014 Eike Rathke <erack@redhat.com> - 50.1.2-14
 - Resolves: rhbz#1126237 bumped n-v-r for icu-config.sh upload
 
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 52.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Mon Aug 04 2014 Eike Rathke <erack@redhat.com> - 50.1.2-13
 - Resolves: rhbz#1126237 icu-config for ppc64le
 
 * Mon Jul 14 2014 Eike Rathke <erack@redhat.com> - 50.1.2-12
 - Resolves: rhbz#1115726 bad 2-digit year test case, FTBFS
 
+* Fri Jun 13 2014 Eike Rathke <erack@redhat.com> - 52.1-3
+- Resolves: rhbz#1106793 bad 2-digit year test case
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 52.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Tue Mar 11 2014 Eike Rathke <erack@redhat.com> - 50.1.2-11
 - Resolves: rhbz#1074549 Layout Engine LookupProcessor insufficient input checks
+
+* Tue Feb 11 2014 Eike Rathke <erack@redhat.com> - 52.1-1
+- upgrade to upstream ICU 52.1
+- Resolves: rhbz#1049265 icu-52.1 is available
+- Resolves: rhbz#1050063 Trivial change to icu-config to support ppc64le
+- drop icu-51-layout-fix-10107.tgz source
+- drop integrated icu.10318.CVE-2013-2924_changeset_34076.patch
+- drop integrated icu.10143.memory.leak.crash.patch
 
 * Sun Oct 27 2013 Remi Collet <rpms@famillecollet.com>- 50.1.2-10
 - rename to icu-last
