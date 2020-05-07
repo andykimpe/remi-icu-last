@@ -16,12 +16,12 @@
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
 Name:      icu%{soname}
-Version:   %{soname}.1
-Release:   3%{?dist}
+Version:   %{soname}.2
+Release:   1%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/%{soname}.1/icu4c-%{soname}_1-src.tgz
+Source0:   https://github.com/unicode-org/icu/releases/download/release-62-2/icu4c-62_2-src.tgz
 Source1:   icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python2
@@ -84,9 +84,6 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 %description -n lib%{name}-doc
 %{summary}.
 
-%{!?endian: %global endian %(%{__python} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
-# " this line just fixes syntax highlighting for vim that is confused by the above and continues literal
-
 
 %prep
 %setup -q -n %{srcname}
@@ -102,8 +99,7 @@ pushd source
 autoconf
 CFLAGS='%optflags -fno-strict-aliasing'
 CXXFLAGS='%optflags -fno-strict-aliasing'
-# Endian: BE=0 LE=1
-%if ! 0%{?endian}
+%if 0
 CPPFLAGS='-DU_IS_BIG_ENDIAN=1'
 %endif
 
@@ -219,6 +215,10 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Thu May  7 2020 Remi Collet <remi@remirepo.net> - 62.2-1
+- update to 62.2
+  https://github.com/remicollet/remirepo/issues/149
+
 * Thu Feb  7 2019 Pavel Podkorytov <pod.pavel@gmail.com> - 62.1-3
 - backport FEDORA-29 changes
 - rename "libicu-last" to "libicu62"
