@@ -11,17 +11,15 @@
 
 %global srcname       icu
 %global soname        65
-
-# Regression tests take a long time, you can skip 'em with this
-%{!?runselftest: %{expand: %%global runselftest 1}}
+%global subver        1
 
 Name:      icu%{soname}
-Version:   %{soname}.1
+Version:   %{soname}.%{subver}
 Release:   1%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
-Source0:   https://github.com/unicode-org/icu/releases/download/release-65-1/icu4c-65_1-src.tgz
+Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-src.tgz
 Source1:   icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python3
@@ -30,6 +28,7 @@ BuildRequires: gcc-c++
 
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Conflicts: %{srcname}-last    < %{version}
+Conflicts: %{srcname}62       < %{version}
 Conflicts: %{srcname}         < %{version}
 Provides:  %{srcname}         = %{version}-%{release}
 Provides:  %{srcname}%{?_isa} = %{version}-%{release}
@@ -66,6 +65,7 @@ Group:    Development/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Conflicts: lib%{srcname}-last-devel    < %{version}
+Conflicts: lib%{srcname}62-devel       < %{version}
 Conflicts: lib%{srcname}-devel         < %{version}
 Provides:  lib%{srcname}-devel         = %{version}-%{release}
 Provides:  lib%{srcname}-devel%{?_isa} = %{version}-%{release}
@@ -78,6 +78,7 @@ Summary: Documentation for International Components for Unicode
 Group:   Documentation
 BuildArch: noarch
 Conflicts: lib%{srcname}-last-doc < %{version}
+Conflicts: lib%{srcname}62-doc    < %{version}
 Conflicts: lib%{srcname}-doc      < %{version}
 Provides:  lib%{srcname}-doc      = %{version}-%{release}
 
