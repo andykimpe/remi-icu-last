@@ -10,21 +10,21 @@
 #
 
 %global srcname       icu
-%global soname        62
+%global soname        65
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
 
 Name:      icu%{soname}
-Version:   %{soname}.2
+Version:   %{soname}.1
 Release:   1%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
-Source0:   https://github.com/unicode-org/icu/releases/download/release-62-2/icu4c-62_2-src.tgz
+Source0:   https://github.com/unicode-org/icu/releases/download/release-65-1/icu4c-65_1-src.tgz
 Source1:   icu-config.sh
 
-BuildRequires: doxygen, autoconf >= 2.69, python2
+BuildRequires: doxygen, autoconf >= 2.69, python3
 BuildRequires: gcc
 BuildRequires: gcc-c++
 
@@ -34,10 +34,10 @@ Conflicts: %{srcname}         < %{version}
 Provides:  %{srcname}         = %{version}-%{release}
 Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
+# Fix the build on s390x
+Patch0: icu-64.1-data_archive_generation.patch
 Patch4: gennorm2-man.patch
 Patch5: icuinfo-man.patch
-Patch6: rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
-Patch100: armv7hl-disable-tests.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -87,12 +87,9 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 
 %prep
 %setup -q -n %{srcname}
+%patch0 -p1 -b .arc-gen
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
-%patch6 -p2 -b .rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
-%ifarch armv7hl
-%patch100 -p1 -b .armv7hl-disable-tests.patch
-%endif
 
 %build
 pushd source
@@ -215,6 +212,10 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Wed Jul  1 2020 Remi Collet <remi@remirepo.net> - 65.1-1
+- update to 65.1
+  https://github.com/remicollet/remirepo/issues/153
+
 * Thu May  7 2020 Remi Collet <remi@remirepo.net> - 62.2-1
 - update to 62.2
   https://github.com/remicollet/remirepo/issues/149
