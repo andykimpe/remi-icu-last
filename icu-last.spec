@@ -1,4 +1,4 @@
-# remirepo spec file for icu62
+# remirepo spec file for icu65
 # renamed for parallel installation, from:
 #
 # Fedora spec file for icu
@@ -26,7 +26,7 @@ BuildRequires: doxygen, autoconf >= 2.69, python3
 BuildRequires: gcc
 BuildRequires: gcc-c++
 
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
+Requires:  lib%{name}%{?_isa} = %{version}-%{release}
 Conflicts: %{srcname}-last    < %{version}
 Conflicts: %{srcname}62       < %{version}
 Conflicts: %{srcname}         < %{version}
