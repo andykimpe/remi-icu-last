@@ -10,7 +10,7 @@
 #
 
 %global srcname       icu
-%global soname        65
+%global soname        69
 %global subver        1
 
 Name:      icu%{soname}
@@ -25,16 +25,16 @@ Source1:   icu-config.sh
 BuildRequires: doxygen, autoconf >= 2.69, python3
 BuildRequires: gcc
 BuildRequires: gcc-c++
+BuildRequires: make
 
 Requires:  lib%{name}%{?_isa} = %{version}-%{release}
 Conflicts: %{srcname}-last    < %{version}
 Conflicts: %{srcname}62       < %{version}
+Conflicts: %{srcname}65       < %{version}
 Conflicts: %{srcname}         < %{version}
 Provides:  %{srcname}         = %{version}-%{release}
 Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
-# Fix the build on s390x
-Patch0: icu-64.1-data_archive_generation.patch
 Patch4: gennorm2-man.patch
 Patch5: icuinfo-man.patch
 
@@ -66,6 +66,7 @@ Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Conflicts: lib%{srcname}-last-devel    < %{version}
 Conflicts: lib%{srcname}62-devel       < %{version}
+Conflicts: lib%{srcname}65-devel       < %{version}
 Conflicts: lib%{srcname}-devel         < %{version}
 Provides:  lib%{srcname}-devel         = %{version}-%{release}
 Provides:  lib%{srcname}-devel%{?_isa} = %{version}-%{release}
@@ -79,6 +80,7 @@ Group:   Documentation
 BuildArch: noarch
 Conflicts: lib%{srcname}-last-doc < %{version}
 Conflicts: lib%{srcname}62-doc    < %{version}
+Conflicts: lib%{srcname}65-doc    < %{version}
 Conflicts: lib%{srcname}-doc      < %{version}
 Provides:  lib%{srcname}-doc      = %{version}-%{release}
 
@@ -88,7 +90,6 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 
 %prep
 %setup -q -n %{srcname}
-%patch0 -p1 -b .arc-gen
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
 
@@ -141,12 +142,7 @@ install -p -m755 -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/icu-config
 if grep -q @VERSION@ source/tools/*/*.8 source/tools/*/*.1 source/config/*.1; then
     exit 1
 fi
-%ifarch i686
-# F26 since the mass rebuild in 2017-Feb fails a check, ignore error. TODO: find cause / disable only one.
-make %{?_smp_mflags} -C source check ||:
-%else
 make %{?_smp_mflags} -C source check
-%endif
 
 # log available codes
 pushd source
@@ -213,6 +209,9 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Wed Sep 29 2021 Remi Collet <remi@remirepo.net> - 69.1-1
+- update to 69.1
+
 * Wed Jul  1 2020 Remi Collet <remi@remirepo.net> - 65.1-1
 - update to 65.1
   https://github.com/remicollet/remirepo/issues/153
