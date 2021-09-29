@@ -13,6 +13,11 @@
 %global soname        69
 %global subver        1
 
+%if 0%{?fedora} == 34
+# rhbz#2003359 crash in umtx_initImplPreInit() from unorm_normalize()
+%global _lto_cflags %nil
+%endif
+
 Name:      icu%{soname}
 Version:   %{soname}.%{subver}
 Release:   1%{?dist}
@@ -23,8 +28,13 @@ Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname
 Source1:   icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python3
+%if 0%{?rhel} == 7
+%global dtsenable source /opt/rh/devtoolset-9/enable
+BuildRequires: devtoolset-9-toolchain
+%else
 BuildRequires: gcc
 BuildRequires: gcc-c++
+%endif
 BuildRequires: make
 
 Requires:  lib%{name}%{?_isa} = %{version}-%{release}
@@ -92,8 +102,14 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 %setup -q -n %{srcname}
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
+%if 0%{?fedora} == 34
+sed -e '/SELFCHECK=1/d' -i source/Makefile.in
+%endif
+
 
 %build
+%{?dtsenable}
+
 pushd source
 autoconf
 CFLAGS='%optflags -fno-strict-aliasing'
@@ -127,6 +143,8 @@ make %{?_smp_mflags} VERBOSE=1
 make %{?_smp_mflags} doc
 
 %install
+%{?dtsenable}
+
 rm -rf $RPM_BUILD_ROOT source/__docs
 make %{?_smp_mflags} -C source install DESTDIR=$RPM_BUILD_ROOT
 make %{?_smp_mflags} -C source install-doc docdir=__docs
@@ -138,6 +156,8 @@ chmod +x $RPM_BUILD_ROOT%{_libdir}/*.so.*
 install -p -m755 -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/icu-config
 
 %check
+%{?dtsenable}
+
 # test to ensure that -j(X>1) didn't "break" man pages. b.f.u #2357
 if grep -q @VERSION@ source/tools/*/*.8 source/tools/*/*.1 source/config/*.1; then
     exit 1
