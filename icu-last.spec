@@ -20,7 +20,7 @@
 
 Name:      icu%{soname}
 Version:   %{soname}.%{subver}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
@@ -29,8 +29,8 @@ Source1:   icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python3
 %if 0%{?rhel} == 7
-%global dtsenable source /opt/rh/devtoolset-9/enable
-BuildRequires: devtoolset-9-toolchain
+%global dtsenable source /opt/rh/devtoolset-10/enable
+BuildRequires: devtoolset-10-toolchain
 %else
 BuildRequires: gcc
 BuildRequires: gcc-c++
@@ -109,6 +109,7 @@ sed -e '/SELFCHECK=1/d' -i source/Makefile.in
 
 %build
 %{?dtsenable}
+gcc --version
 
 pushd source
 autoconf
@@ -229,6 +230,9 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Fri Oct  1 2021 Remi Collet <remi@remirepo.net> - 69.1-2
+- rebuild with GCC 10
+
 * Wed Sep 29 2021 Remi Collet <remi@remirepo.net> - 69.1-1
 - update to 69.1
 
