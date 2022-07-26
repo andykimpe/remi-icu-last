@@ -13,14 +13,14 @@
 %global soname        69
 %global subver        1
 
-%if 0%{?fedora} == 34
+%if 0%{?fedora} == 34 || 0%{?rhel} == 9
 # rhbz#2003359 crash in umtx_initImplPreInit() from unorm_normalize()
 %global _lto_cflags %nil
 %endif
 
 Name:      icu%{soname}
 Version:   %{soname}.%{subver}
-Release:   2%{?dist}
+Release:   3%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
@@ -102,7 +102,7 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 %setup -q -n %{srcname}
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
-%if 0%{?fedora} == 34
+%if 0%{?fedora} == 34 || 0%{?rhel} == 9
 sed -e '/SELFCHECK=1/d' -i source/Makefile.in
 %endif
 
@@ -230,6 +230,9 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Thu Nov  4 2021 Remi Collet <remi@remirepo.net> - 69.1-3
+- EL-9 build
+
 * Fri Oct  1 2021 Remi Collet <remi@remirepo.net> - 69.1-2
 - rebuild with GCC 10
 
