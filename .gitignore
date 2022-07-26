@@ -6,3 +6,5 @@ package-*.xml
 *.tar.xz.asc
 *.src.rpm
 */*rpm
+*.txt
+*.zip

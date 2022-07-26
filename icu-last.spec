@@ -13,6 +13,12 @@
 %global soname        69
 %global subver        1
 
+# Set to 0 when upgrading to a new ICU release that contains up-to-date timezone data.
+# (or update the timezone data update..).
+%global use_tzdata_update 1
+# Adjust to version major; used in tzdata update.
+%global icu_major 69
+
 %if 0%{?fedora} == 34 || 0%{?rhel} == 9
 # rhbz#2003359 crash in umtx_initImplPreInit() from unorm_normalize()
 %global _lto_cflags %nil
@@ -20,12 +26,19 @@
 
 Name:      icu%{soname}
 Version:   %{soname}.%{subver}
-Release:   3%{?dist}
+Release:   4%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
 Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-src.tgz
-Source1:   icu-config.sh
+%if 0%{?use_tzdata_update}
+Source1:   https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-data.zip
+Source2:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/metaZones.txt
+Source3:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/timezoneTypes.txt
+Source4:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/windowsZones.txt
+Source5:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/zoneinfo64.txt
+%endif
+Source10:  icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python3
 %if 0%{?rhel} == 7
@@ -47,13 +60,14 @@ Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
 Patch4: gennorm2-man.patch
 Patch5: icuinfo-man.patch
+Patch10: timezone-update.patch
+Patch11: timezone-update-2022a.patch
 
 %description
 Tools and utilities for developing with icu.
 
 %package -n lib%{name}
 Summary: International Components for Unicode - libraries
-Group:   System Environment/Libraries
 
 %description -n lib%{name}
 The International Components for Unicode (ICU) libraries provide
@@ -71,7 +85,6 @@ This package is designed to be installable beside lib%{srcname}.
 
 %package  -n lib%{name}-devel
 Summary:  Development files for International Components for Unicode
-Group:    Development/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Conflicts: lib%{srcname}-last-devel    < %{version}
@@ -86,7 +99,6 @@ Includes and definitions for developing with icu.
 
 %package -n lib%{name}-doc
 Summary: Documentation for International Components for Unicode
-Group:   Documentation
 BuildArch: noarch
 Conflicts: lib%{srcname}-last-doc < %{version}
 Conflicts: lib%{srcname}62-doc    < %{version}
@@ -102,8 +114,19 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 %setup -q -n %{srcname}
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
+%patch10 -p1 -b .up1
+%patch11 -p1 -b .up2
+
 %if 0%{?fedora} == 34 || 0%{?rhel} == 9
 sed -e '/SELFCHECK=1/d' -i source/Makefile.in
+%endif
+
+%if 0%{?use_tzdata_update}
+pushd source
+unzip -o %{SOURCE1}
+rm -f data/in/icudt%{icu_major}l.dat
+cp -v -f %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} data/misc
+popd
 %endif
 
 
@@ -154,7 +177,7 @@ chmod +x $RPM_BUILD_ROOT%{_libdir}/*.so.*
  cd $RPM_BUILD_ROOT%{_bindir}
  mv icu-config icu-config-%{__isa_bits}
 )
-install -p -m755 -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/icu-config
+install -p -m755 -D %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/icu-config
 
 %check
 %{?dtsenable}
@@ -230,6 +253,9 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Tue Jul 26 2022 Remi Collet <remi@remirepo.net> - 69.1-4
+- Update timezone data to 2022a
+
 * Thu Nov  4 2021 Remi Collet <remi@remirepo.net> - 69.1-3
 - EL-9 build
 
