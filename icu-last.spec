@@ -1,4 +1,4 @@
-# remirepo spec file for icu65
+# remirepo spec file for icu71
 # renamed for parallel installation, from:
 #
 # Fedora spec file for icu
@@ -13,6 +13,8 @@
 %global soname        71
 %global subver        1
 
+%bcond_without        tests
+
 # Set to 0 when upgrading to a new ICU release that contains up-to-date timezone data.
 # (or update the timezone data update..).
 %global use_tzdata_update 1
@@ -26,17 +28,17 @@
 
 Name:      icu%{soname}
 Version:   %{soname}.%{subver}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
 Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-src.tgz
 %if 0%{?use_tzdata_update}
 Source1:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-data.zip
-Source2:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/metaZones.txt
-Source3:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/timezoneTypes.txt
-Source4:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/windowsZones.txt
-Source5:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/zoneinfo64.txt
+Source2:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022b/44/metaZones.txt
+Source3:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022b/44/timezoneTypes.txt
+Source4:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022b/44/windowsZones.txt
+Source5:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022b/44/zoneinfo64.txt
 %endif
 Source10:  icu-config.sh
 
@@ -60,6 +62,7 @@ Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
 Patch4: gennorm2-man.patch
 Patch5: icuinfo-man.patch
+Patch10: timezone-update-2022b.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -112,6 +115,7 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 %setup -q -n %{srcname}
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
+%patch10 -p1 -b .update
 
 %if 1
 sed -e '/SELFCHECK=1/d' -i source/Makefile.in
@@ -175,6 +179,7 @@ chmod +x $RPM_BUILD_ROOT%{_libdir}/*.so.*
 )
 install -p -m755 -D %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/icu-config
 
+%if %{with tests}
 %check
 %{?dtsenable}
 
@@ -187,6 +192,7 @@ make %{?_smp_mflags} -C source check
 # log available codes
 pushd source
 LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
+%endif
 
 
 %if 0%{?fedora} < 28 && 0%{?rhel} < 8
@@ -251,6 +257,9 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Fri Oct 21 2022 Remi Collet <remi@remirepo.net> - 71.1-2
+- Update timezone data to 2022b
+
 * Tue Aug 16 2022 Remi Collet <remi@remirepo.net> - 71.1-1
 - update to 71.1 (from F37)
 
