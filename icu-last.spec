@@ -10,16 +10,16 @@
 #
 
 %global srcname       icu
-%global soname        71
+%global soname        72
 %global subver        1
 
 %bcond_without        tests
 
 # Set to 0 when upgrading to a new ICU release that contains up-to-date timezone data.
 # (or update the timezone data update..).
-%global use_tzdata_update 1
+%global use_tzdata_update 0
 # Adjust to version major; used in tzdata update.
-%global icu_major 71
+%global icu_major 72
 
 %if 0%{?fedora} == 34 || 0%{?rhel} == 9
 # rhbz#2003359 crash in umtx_initImplPreInit() from unorm_normalize()
@@ -28,9 +28,9 @@
 
 Name:      icu%{soname}
 Version:   %{soname}.%{subver}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Summary:   International Components for Unicode
-License:   MIT and UCD and Public Domain
+License:   Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-Clause AND LicenseRef-Fedora-Public-Domain
 URL:       http://site.icu-project.org/
 Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-src.tgz
 %if 0%{?use_tzdata_update}
@@ -62,7 +62,6 @@ Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
 Patch4: gennorm2-man.patch
 Patch5: icuinfo-man.patch
-Patch10: timezone-update-2022b.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -115,7 +114,6 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 %setup -q -n %{srcname}
 %patch4 -p1 -b .gennorm2-man.patch
 %patch5 -p1 -b .icuinfo-man.patch
-%patch10 -p1 -b .update
 
 %if 1
 sed -e '/SELFCHECK=1/d' -i source/Makefile.in
@@ -217,12 +215,12 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 %{_bindir}/uconv
 %{_sbindir}/*
 %{_mandir}/man1/derb.1*
-%{_mandir}/man1/icuexportdata.1*
+%{_mandir}/man1/genbrk.1*
 %{_mandir}/man1/gencfu.1*
 %{_mandir}/man1/gencnval.1*
 %{_mandir}/man1/gendict.1*
 %{_mandir}/man1/genrb.1*
-%{_mandir}/man1/genbrk.1*
+%{_mandir}/man1/icuexportdata.1*
 %{_mandir}/man1/makeconv.1*
 %{_mandir}/man1/pkgdata.1*
 %{_mandir}/man1/uconv.1*
@@ -257,6 +255,9 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 
 
 %changelog
+* Fri Apr 14 2023 Remi Collet <remi@remirepo.net> - 72.1-1
+- update to 72.1 (from F38)
+
 * Fri Oct 21 2022 Remi Collet <remi@remirepo.net> - 71.1-2
 - Update timezone data to 2022b
 
