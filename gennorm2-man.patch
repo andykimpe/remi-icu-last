@@ -80,7 +80,7 @@ diff -r -u -N icu.orig/source/tools/gennorm2/gennorm2.8.in icu/source/tools/genn
 diff -r -u -N icu.orig/source/tools/gennorm2/Makefile.in icu/source/tools/gennorm2/Makefile.in
 --- icu.orig/source/tools/gennorm2/Makefile.in	2013-01-11 01:23:32.000000000 +0100
 +++ icu/source/tools/gennorm2/Makefile.in	2013-02-25 16:43:28.296062632 +0100
-@@ -16,8 +16,13 @@
+@@ -18,8 +18,13 @@
  
  TARGET_STUB_NAME = gennorm2
  
@@ -95,7 +95,7 @@ diff -r -u -N icu.orig/source/tools/gennorm2/Makefile.in icu/source/tools/gennor
  
  ## Target information
  TARGET = $(BINDIR)/$(TARGET_STUB_NAME)$(EXEEXT)
-@@ -44,12 +49,16 @@
+@@ -47,12 +52,16 @@
  dist: dist-local
  check: all check-local
  
@@ -114,7 +114,7 @@ diff -r -u -N icu.orig/source/tools/gennorm2/Makefile.in icu/source/tools/gennor
  dist-local:
  
  clean-local:
-@@ -70,6 +79,11 @@
+@@ -73,6 +82,11 @@
  	$(POST_BUILD_STEP)
  
  

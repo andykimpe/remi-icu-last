@@ -86,7 +86,7 @@ diff -Nur orig.icu/source/tools/icuinfo/icuinfo.1.in icu/source/tools/icuinfo/ic
 diff -Nur orig.icu/source/tools/icuinfo/Makefile.in icu/source/tools/icuinfo/Makefile.in
 --- orig.icu/source/tools/icuinfo/Makefile.in	2015-10-08 05:53:56.000000000 +0200
 +++ icu/source/tools/icuinfo/Makefile.in	2015-10-27 19:23:19.115509906 +0100
-@@ -14,8 +14,15 @@
+@@ -16,8 +16,15 @@
  ## Build directory information
  subdir = tools/icuinfo
  
@@ -103,7 +103,7 @@ diff -Nur orig.icu/source/tools/icuinfo/Makefile.in icu/source/tools/icuinfo/Mak
  
  ## Target information
  TARGET = icuinfo$(EXEEXT)
-@@ -35,7 +42,8 @@
+@@ -39,7 +46,8 @@
  
  ## List of phony targets
  .PHONY : all all-local install install-local clean clean-local		\
@@ -113,7 +113,7 @@ diff -Nur orig.icu/source/tools/icuinfo/Makefile.in icu/source/tools/icuinfo/Mak
  
  ## Clear suffix list
  .SUFFIXES :
-@@ -48,12 +56,16 @@
+@@ -52,12 +60,16 @@
  dist: dist-local
  check: all check-local
  
@@ -132,7 +132,7 @@ diff -Nur orig.icu/source/tools/icuinfo/Makefile.in icu/source/tools/icuinfo/Mak
  dist-local:
  
  clean-local:
-@@ -103,6 +115,10 @@
+@@ -107,6 +119,10 @@
  	@echo "Plugins are disabled (use --enable-plugins to enable)"
  endif
  
