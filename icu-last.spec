@@ -32,9 +32,9 @@ Provides:  %{srcname} = %{version}-%{release}
 Patch1: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.8198.revert.icu5431.patch
 Patch2: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.8800.freeserif.crash.patch
 Patch3: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.7601.Indic-ccmp.patch
-Patch4: icu.9948.mlym-crash.patch
-Patch5: gennorm2-man.patch
-Patch6: icuinfo-man.patch
+Patch4: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.9948.mlym-crash.patch
+Patch5: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/gennorm2-man.patch
+Patch6: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icuinfo-man.patch
 Patch7: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.10143.memory.leak.crash.patch
 Patch8: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.10318.CVE-2013-2924_changeset_34076.patch
 Patch9: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.rhbz1074549.CVE-2013-5907.patch
