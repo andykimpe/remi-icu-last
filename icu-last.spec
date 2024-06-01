@@ -82,7 +82,7 @@ Provides:  lib%{srcname}-doc = %{version}-%{release}
 %description -n lib%{name}-doc
 %{summary}.
 
-%{!?endian: %global endian %(%{__python} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
+#%{!?endian: %global endian %(%{__python} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
 # " this line just fixes syntax highlighting for vim that is confused by the above and continues literal
 
 %prep
