@@ -1,3 +1,4 @@
+%global __python to /usr/bin/python2
 %global srcname       icu
 
 # Regression tests take a long time, you can skip 'em with this
