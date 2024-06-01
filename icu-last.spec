@@ -5,20 +5,20 @@
 
 Name:      icu-last
 Version:   50.1.2
-Release:   17%{?dist}
+Release:   18%{?dist}
 Summary:   International Components for Unicode
 Group:     Development/Tools
 License:   MIT and UCD and Public Domain
 URL:       http://www.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/50.1.2/icu4c-50_1_2-src.tgz
+Source0:   https://github.com/andykimpe/remi-icu-last/releases/download/50.1.2/icu4c-50_1_2-src.tgz
 # According to ICU the layout "patch" should be applied to all versions earlier than 51.2
 # See also http://site.icu-project.org/download/51#TOC-Known-Issues
-Source1:   http://download.icu-project.org/files/icu4c/51.1/icu-51-layout-fix-10107.tgz
-Source2:   icu-config.sh
-Source10:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/metaZones.txt
-Source11:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/timezoneTypes.txt
-Source12:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/windowsZones.txt
-Source13:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/zoneinfo64.txt
+Source1:   https://github.com/andykimpe/remi-icu-last/releases/download/50.1.2/icu-51-layout-fix-10107.tgz
+Source2:   https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu-config.sh
+Source10:   https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/metaZones.txt
+Source11:   https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/timezoneTypes.txt
+Source12:   https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/windowsZones.txt
+Source13:   https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/zoneinfo64.txt
 %if 0%{?rhel} == 6
 BuildRequires: doxygen, autoconf268, python
 %else
@@ -28,17 +28,17 @@ Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Conflicts: %{srcname} < %{version}
 Provides:  %{srcname} = %{version}-%{release}
 
-Patch1: icu.8198.revert.icu5431.patch
-Patch2: icu.8800.freeserif.crash.patch
-Patch3: icu.7601.Indic-ccmp.patch
+Patch1: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.8198.revert.icu5431.patch
+Patch2: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.8800.freeserif.crash.patch
+Patch3: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.7601.Indic-ccmp.patch
 Patch4: icu.9948.mlym-crash.patch
 Patch5: gennorm2-man.patch
 Patch6: icuinfo-man.patch
-Patch7: icu.10143.memory.leak.crash.patch
-Patch8: icu.10318.CVE-2013-2924_changeset_34076.patch
-Patch9: icu.rhbz1074549.CVE-2013-5907.patch
-Patch10: icu-testtwodigityear.patch
-Patch11: do-not-fail-intltest-because-of-changed-data.patch
+Patch7: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.10143.memory.leak.crash.patch
+Patch8: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.10318.CVE-2013-2924_changeset_34076.patch
+Patch9: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu.rhbz1074549.CVE-2013-5907.patch
+Patch10: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/icu-testtwodigityear.patch
+Patch11: https://github.com/andykimpe/remi-icu-last/raw/icu-50.1.2/do-not-fail-intltest-because-of-changed-data.patch
 
 %description
 Tools and utilities for developing with icu.
