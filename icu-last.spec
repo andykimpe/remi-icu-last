@@ -20,7 +20,7 @@ Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
 Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-src.tgz
-Source1:   icu-config.sh
+Source1:   https://github.com/andykimpe/remi-icu-last/raw/icu-65.1/icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python3
 BuildRequires: gcc
@@ -34,9 +34,9 @@ Provides:  %{srcname}         = %{version}-%{release}
 Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
 # Fix the build on s390x
-Patch0: icu-64.1-data_archive_generation.patch
-Patch4: gennorm2-man.patch
-Patch5: icuinfo-man.patch
+Patch0: https://github.com/andykimpe/remi-icu-last/raw/icu-65.1/icu-64.1-data_archive_generation.patch
+Patch4: https://github.com/andykimpe/remi-icu-last/raw/icu-65.1/gennorm2-man.patch
+Patch5: https://github.com/andykimpe/remi-icu-last/raw/icu-65.1/icuinfo-man.patch
 
 %description
 Tools and utilities for developing with icu.
