@@ -178,6 +178,7 @@ chmod +x $RPM_BUILD_ROOT%{_libdir}/*.so.*
  mv icu-config icu-config-%{__isa_bits}
 )
 install -p -m755 -D %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/icu-config
+rm -rf $RPM_BUILD_ROOT%%{_mandir}/man1/icuinfo.1*
 
 %check
 %{?dtsenable}
@@ -235,7 +236,6 @@ LD_LIBRARY_PATH=lib:stubdata:tools/ctestfw:$LD_LIBRARY_PATH bin/uconv -l
 %{_bindir}/%{srcname}-config*
 %{_bindir}/icuinfo
 %{_mandir}/man1/%{srcname}-config.1*
-%{_mandir}/man1/icuinfo.1*
 %{_includedir}/unicode
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
