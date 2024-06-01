@@ -83,63 +83,64 @@ diff -Nur orig.icu/source/tools/icuinfo/icuinfo.1.in icu/source/tools/icuinfo/ic
 +Print the current UTC time in milliseconds.
 +.SH COPYRIGHT
 +Copyright (C) 2010 International Business Machines Corporation and others
-diff -Nur orig.icu/source/tools/icuinfo/Makefile.in icu/source/tools/icuinfo/Makefile.in
---- orig.icu/source/tools/icuinfo/Makefile.in	2015-10-08 05:53:56.000000000 +0200
-+++ icu/source/tools/icuinfo/Makefile.in	2015-10-27 19:23:19.115509906 +0100
-@@ -14,8 +14,15 @@
- ## Build directory information
- subdir = tools/icuinfo
- 
-+TARGET_STUB_NAME = icuinfo
-+
-+SECTION = 1
-+
-+MAN_FILES = $(TARGET_STUB_NAME).$(SECTION)
-+
-+
- ## Extra files to remove for 'make clean'
--CLEANFILES = *~ $(DEPS) $(PLUGIN_OBJECTS) $(PLUGINFILE) $(PLUGIN)
-+CLEANFILES = *~ $(DEPS) $(PLUGIN_OBJECTS) $(PLUGINFILE) $(PLUGIN) $(MAN_FILES)
- 
- ## Target information
- TARGET = icuinfo$(EXEEXT)
-@@ -35,7 +42,8 @@
- 
- ## List of phony targets
- .PHONY : all all-local install install-local clean clean-local		\
--distclean distclean-local dist dist-local check check-local plugin-check
-+distclean distclean-local dist dist-local check check-local plugin-check \
-+install-man
- 
- ## Clear suffix list
- .SUFFIXES :
-@@ -48,12 +56,16 @@
- dist: dist-local
- check: all check-local
- 
--all-local: $(TARGET) 
-+all-local: $(TARGET) $(MAN_FILES)
- 
--install-local: all-local
-+install-local: all-local install-man
- 	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
- 	$(INSTALL) $(TARGET) $(DESTDIR)$(bindir)
- 
-+install-man: $(MAN_FILES)
-+	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man$(SECTION)
-+	$(INSTALL_DATA) $? $(DESTDIR)$(mandir)/man$(SECTION)
-+
- dist-local:
- 
- clean-local:
-@@ -103,6 +115,10 @@
- 	@echo "Plugins are disabled (use --enable-plugins to enable)"
- endif
- 
-+%.$(SECTION): $(srcdir)/%.$(SECTION).in
-+	cd $(top_builddir) \
-+	 && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
-+
- ifeq (,$(MAKECMDGOALS))
- -include $(DEPS)
- else
+#diff -Nur orig.icu/source/tools/icuinfo/Makefile.in icu/source/tools/icuinfo/Makefile.in
+#--- orig.icu/source/tools/icuinfo/Makefile.in	2015-10-08 05:53:56.000000000 +0200
+#+++ icu/source/tools/icuinfo/Makefile.in	2015-10-27 19:23:19.115509906 +0100
+#@@ -14,8 +14,15 @@
+# ## Build directory information
+# subdir = tools/icuinfo
+# 
+#+TARGET_STUB_NAME = icuinfo
+#+
+#+SECTION = 1
+#+
+#+MAN_FILES = $(TARGET_STUB_NAME).$(SECTION)
+#+
+#+
+# ## Extra files to remove for 'make clean'
+#-CLEANFILES = *~ $(DEPS) $(PLUGIN_OBJECTS) $(PLUGINFILE) $(PLUGIN)
+#+CLEANFILES = *~ $(DEPS) $(PLUGIN_OBJECTS) $(PLUGINFILE) $(PLUGIN) $(MAN_FILES)
+# 
+# ## Target information
+# TARGET = icuinfo$(EXEEXT)
+#@@ -35,7 +42,8 @@
+# 
+# ## List of phony targets
+# .PHONY : all all-local install install-local clean clean-local		\
+#-distclean distclean-local dist dist-local check check-local plugin-check
+#+distclean distclean-local dist dist-local check check-local plugin-check \
+#+install-man
+# 
+# ## Clear suffix list
+# .SUFFIXES :
+#@@ -48,12 +56,16 @@
+# dist: dist-local
+# check: all check-local
+# 
+#-all-local: $(TARGET) 
+#+all-local: $(TARGET) $(MAN_FILES)
+# 
+#-install-local: all-local
+#+install-local: all-local install-man
+# 	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
+# 	$(INSTALL) $(TARGET) $(DESTDIR)$(bindir)
+# 
+#+install-man: $(MAN_FILES)
+#+	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man$(SECTION)
+#+	$(INSTALL_DATA) $? $(DESTDIR)$(mandir)/man$(SECTION)
+#+
+# dist-local:
+# 
+# clean-local:
+#@@ -103,6 +115,10 @@
+# 	@echo "Plugins are disabled (use --enable-plugins to enable)"
+# endif
+# 
+#+%.$(SECTION): $(srcdir)/%.$(SECTION).in
+#+	cd $(top_builddir) \
+#+	 && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+#+
+# ifeq (,$(MAKECMDGOALS))
+# -include $(DEPS)
+# else
+#
