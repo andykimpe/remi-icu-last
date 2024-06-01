@@ -22,7 +22,7 @@ Summary:   International Components for Unicode
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
 Source0:   https://github.com/andykimpe/remi-icu-last/releases/download/62.1/icu4c-62_1-src.tgz
-Source1:   icu-config.sh
+Source1:   https://github.com/andykimpe/remi-icu-last/raw/icu-62.1/icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python2
 BuildRequires: gcc
@@ -34,10 +34,10 @@ Conflicts: %{srcname}         < %{version}
 Provides:  %{srcname}         = %{version}-%{release}
 Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
-Patch4: gennorm2-man.patch
-Patch5: icuinfo-man.patch
-Patch6: rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
-Patch100: armv7hl-disable-tests.patch
+Patch4: https://github.com/andykimpe/remi-icu-last/raw/icu-62.1/gennorm2-man.patch
+Patch5: https://github.com/andykimpe/remi-icu-last/raw/icu-62.1/icuinfo-man.patch
+Patch6: https://github.com/andykimpe/remi-icu-last/raw/icu-62.1/rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
+Patch100: https://github.com/andykimpe/remi-icu-last/raw/icu-62.1/armv7hl-disable-tests.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -90,11 +90,11 @@ Provides:  lib%{srcname}-doc      = %{version}-%{release}
 
 %prep
 %setup -q -n %{srcname}
-%patch4 -p1 -b .gennorm2-man.patch
-%patch5 -p1 -b .icuinfo-man.patch
-%patch6 -p2 -b .rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
+%patch -P 4 -p1 -b .gennorm2-man.patch
+%patch -P 5 -p1 -b .icuinfo-man.patch
+%patch -P 6 -p2 -b .rhbz1646703-icu4c-ICU-20246-integer-overflow.patch
 %ifarch armv7hl
-%patch100 -p1 -b .armv7hl-disable-tests.patch
+%patch -P 100 -p1 -b .armv7hl-disable-tests.patch
 %endif
 
 %build
