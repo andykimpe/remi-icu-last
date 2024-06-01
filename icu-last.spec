@@ -33,12 +33,12 @@ URL:       http://site.icu-project.org/
 Source0:   https://github.com/unicode-org/icu/releases/download/release-%{soname}-%{subver}/icu4c-%{soname}_%{subver}-src.tgz
 %if 0%{?use_tzdata_update}
 Source1:   https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-data.zip
-Source2:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/metaZones.txt
-Source3:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/timezoneTypes.txt
-Source4:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/windowsZones.txt
-Source5:   https://raw.githubusercontent.com/unicode-org/icu-data/main/tzdata/icunew/2022a/44/zoneinfo64.txt
+Source2:   https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/metaZones.txt
+Source3:   https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/timezoneTypes.txt
+Source4:   https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/windowsZones.txt
+Source5:   https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/zoneinfo64.txt
 %endif
-Source10:  icu-config.sh
+Source10:  https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/icu-config.sh
 
 BuildRequires: doxygen, autoconf >= 2.69, python3
 %if 0%{?rhel} == 7
@@ -58,10 +58,10 @@ Conflicts: %{srcname}         < %{version}
 Provides:  %{srcname}         = %{version}-%{release}
 Provides:  %{srcname}%{?_isa} = %{version}-%{release}
 
-Patch4: gennorm2-man.patch
-Patch5: icuinfo-man.patch
-Patch10: timezone-update.patch
-Patch11: timezone-update-2022a.patch
+Patch4: https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/gennorm2-man.patch
+Patch5: https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/icuinfo-man.patch
+Patch10: https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/timezone-update.patch
+Patch11: https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/timezone-update-2022a.patch
 
 %description
 Tools and utilities for developing with icu.
