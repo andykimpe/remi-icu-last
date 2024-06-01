@@ -5,10 +5,10 @@ Summary:   International Components for Unicode
 Group:     Development/Tools
 License:   MIT and UCD and Public Domain
 URL:       http://www.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/50.1.2/icu4c-50_1_2-src.tgz
+Source0:   https://github.com/andykimpe/remi-icu-last/releases/download/50.1.2/icu4c-50_1_2-src.tgz
 # According to ICU the layout "patch" should be applied to all versions earlier than 51.2
 # See also http://site.icu-project.org/download/51#TOC-Known-Issues
-Source1:   http://download.icu-project.org/files/icu4c/51.1/icu-51-layout-fix-10107.tgz
+Source1:   https://github.com/andykimpe/remi-icu-last/releases/download/50.1.2/icu-51-layout-fix-10107.tgz
 Source2:   icu-config.sh
 Source10:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/metaZones.txt
 Source11:   http://source.icu-project.org/repos/icu/data/trunk/tzdata/icunew/2018e/44/timezoneTypes.txt
