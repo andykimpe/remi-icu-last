@@ -40,7 +40,7 @@ Source5:   https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/zoneinfo64.tx
 %endif
 Source10:  https://github.com/andykimpe/remi-icu-last/raw/icu-69.1/icu-config.sh
 
-BuildRequires: doxygen, autoconf = 2.69-11, python3
+BuildRequires: doxygen, autoconf269, python3
 %if 0%{?rhel} == 7
 %global dtsenable source /opt/rh/devtoolset-10/enable
 BuildRequires: devtoolset-10-toolchain
