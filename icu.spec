@@ -7,7 +7,7 @@ Summary:   International Components for Unicode
 
 License:   MIT and UCD and Public Domain
 URL:       http://site.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/62.1/icu4c-62_1-src.tgz
+Source0:   https://github.com/andykimpe/remi-icu-last/releases/download/62.1/icu4c-62_1-src.tgz
 Source1:   icu-config.sh
 
 BuildRequires: gcc
