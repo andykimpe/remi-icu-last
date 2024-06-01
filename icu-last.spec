@@ -89,17 +89,17 @@ Provides:  lib%{srcname}-doc = %{version}-%{release}
 %prep
 %setup -q -n %{srcname}
 %setup -q -n %{srcname} -T -D -a 1
-%patch -P 1 -p2 -R -b .icu8198.revert.icu5431.patch
-%patch -P 2 -p1 -b .icu8800.freeserif.crash.patch
-%patch -P 3 -p1 -b .icu7601.Indic-ccmp.patch
-%patch -P 4 -p1 -b .icu9948.mlym-crash.patch
-%patch -P 5 -p1 -b .gennorm2-man.patch
-%patch -P 6 -p1 -b .icuinfo-man.patch
-%patch -P 7 -p1 -b .icu10143.memory.leak.crash.patch
-%patch -P 8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
-%patch -P 9 -p1 -b .icurhbz1074549.CVE-2013-5907.patch
-%patch -P 10 -p1 -b .icu-testtwodigityear.patch
-%patch -P 11 -p1 -b .do-not-fail-intltest-because-of-changed-data.patch
+%patch1 -p2 -R -b .icu8198.revert.icu5431.patch
+%patch2 -p1 -b .icu8800.freeserif.crash.patch
+%patch3 -p1 -b .icu7601.Indic-ccmp.patch
+%patch4 -p1 -b .icu9948.mlym-crash.patch
+%patch5 -p1 -b .gennorm2-man.patch
+%patch6 -p1 -b .icuinfo-man.patch
+%patch7 -p1 -b .icu10143.memory.leak.crash.patch
+%patch8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
+%patch9 -p1 -b .icurhbz1074549.CVE-2013-5907.patch
+%patch10 -p1 -b .icu-testtwodigityear.patch
+%patch11 -p1 -b .do-not-fail-intltest-because-of-changed-data.patch
 
 # http://userguide.icu-project.org/datetime/timezone#TOC-Updating-the-Time-Zone-Data
 # says:
